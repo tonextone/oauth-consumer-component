@@ -150,16 +150,22 @@ class OauthConsumerComponent extends Object {
 		if ($this->isPathWithinPlugin(__FILE__)) {
 			$pluginName = $this->getPluginName();
 			
-			if (file_exists(APP.'plugins'.DS.$pluginName.DS.'vendors'.DS.'OAuth')) {
-				$pathToVendorsFolder = APP.'plugins'.DS.$pluginName.DS.'vendors'.DS;
+			$pluginPaths = Configure::read('pluginPaths');
+			foreach ($pluginPaths as $pth) {
+				if (file_exists($pth.$pluginName.DS.'vendors'.DS.'OAuth')) {
+					$pathToVendorsFolder = $pth.$pluginName.DS.'vendors'.DS;
+					break;
+				}
 			}
 		}
 
 		if ($pathToVendorsFolder == '') {
-			if (file_exists(APP.'vendors'.DS.'OAuth')) {
-				$pathToVendorsFolder = APP.'vendors'.DS;
-			} elseif (file_exists(VENDORS.'OAuth')) {
-				$pathToVendorsFolder = VENDORS;
+			$vendorPaths = Configure::read('vendorPaths');
+			foreach ($vendorPaths as $pth) {
+				if (file_exists($pth.'OAuth')) {
+					$pathToVendorsFolder = $pth;
+					break;
+				}
 			}
 		}
 		
